@@ -16,9 +16,9 @@ import Gauge from './src/screens/Gauge';
 const App = () => {
   let [sample, setSample] = useState([
     {msg: 'empty', color: '#de14af'},
-    // {msg: 'nearing empty', color: '#228ed6'},
-    // {msg: 'really hungry', color: '#22d6be'},
-    // {msg: 'hungry', color: '#22d670'},
+    {msg: 'nearing empty', color: '#228ed6'},
+    {msg: 'really hungry', color: '#22d6be'},
+    {msg: 'hungry', color: '#22d670'},
     // {msg: 'slightly hungry', color: '#c1e314'},
     // {msg: 'neutral', color: '#22d6be'},
     // {msg: 'slightly satisfied', color: '#22d670'},
@@ -28,8 +28,8 @@ const App = () => {
   ]);
   let [rotateValOuter, setRotateValOuter] = useState(90);
   let [rotateValInner, setRotateValInner] = useState(90);
-  let diffVal = 180 / sample.length;
-
+  let diffVal = 10;
+  let degreeDiff = 270 / sample.length;
   let [selectedText, setSelectedText] = useState({
     id: '',
     color: undefined,
@@ -38,7 +38,7 @@ const App = () => {
   let [size, setSize] = useState(400);
   let [innerCircleSize, setInnerCircleSize] = useState(size - 50);
   const percentValue = parseInt((size * (diffVal / 4)) / 100);
-  console.log('asssss', diffVal, percentValue);
+  console.log('asssss', degreeDiff, innerCircleSize * 0.075, percentValue);
   return (
     <SafeAreaView style={styles.container}>
       <View style={{alignSelf: 'center'}}>
@@ -71,12 +71,24 @@ const App = () => {
                     {
                       backgroundColor: data.color.toString(),
                       width: innerCircleSize / 2,
-                      height: innerCircleSize,
-                      borderRadius: innerCircleSize / 2,
+                      height: innerCircleSize / 2,
+                      borderBottomLeftRadius: innerCircleSize,
                       transform: [
-                        {translateX: innerCircleSize / 4},
+                        index == 0
+                          ? {translateX: 1}
+                          : {
+                              translateX: parseInt(
+                                innerCircleSize * (90 / (rotateValOuter * 10)),
+                              ),
+                            },
                         {rotate: `${parseInt(rotateValOuter)}deg`},
-                        {translateX: -innerCircleSize / 4},
+                        index == 0
+                          ? {translateX: -1}
+                          : {
+                              translateX: -parseInt(
+                                innerCircleSize * (90 / (rotateValOuter * 10)),
+                              ),
+                            },
                       ],
                     },
                   ]}>
@@ -149,7 +161,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderColor: 'white',
     // borderWidth: 5,
-    overflow: 'hidden',
+    // overflow: 'hidden',
     left: 0,
     position: 'absolute',
     top: 0,
